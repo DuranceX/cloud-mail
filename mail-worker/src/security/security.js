@@ -43,11 +43,13 @@ const requirePerms = [
 	'/setting/deleteBackground',
 	'/setting/set',
 	'/setting/query',
+	'/setting/setBlacklist',
 	'/user/delete',
 	'/user/setPwd',
 	'/user/setStatus',
 	'/user/setType',
 	'/user/list',
+	'/user/restore',
 	'/user/resetSendCount',
 	'/user/add',
 	'/user/deleteAccount',
@@ -74,13 +76,13 @@ const premKey = {
 	'user:add': ['/user/add'],
 	'user:reset-send': ['/user/resetSendCount'],
 	'user:set-pwd': ['/user/setPwd'],
-	'user:set-status': ['/user/setStatus'],
+	'user:set-status': ['/user/setStatus', '/user/restore'],
 	'user:set-type': ['/user/setType'],
 	'user:delete': ['/user/delete','/user/deleteAccount'],
 	'all-email:query': ['/allEmail/list','/allEmail/latest'],
 	'all-email:delete': ['/allEmail/delete','/allEmail/batchDelete'],
 	'setting:query': ['/setting/query'],
-	'setting:set': ['/setting/set', '/setting/setBackground','/setting/deleteBackground'],
+	'setting:set': ['/setting/set', '/setting/setBackground','/setting/deleteBackground','/setting/setBlacklist'],
 	'analysis:query': ['/analysis/echarts'],
 	'reg-key:add': ['/regKey/add'],
 	'reg-key:query': ['/regKey/list','/regKey/history'],
@@ -114,7 +116,7 @@ app.use('*', async (c, next) => {
 
 	const result = await jwtUtils.verifyToken(c, jwt);
 
-	if (!result) {
+	if (!result || result.gen !== constant.AUTH_GEN) {
 		throw new BizError(t('authExpired'), 401);
 	}
 

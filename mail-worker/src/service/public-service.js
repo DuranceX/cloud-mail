@@ -19,7 +19,7 @@ const publicService = {
 
 	async emailList(c, params) {
 
-		let { toEmail, content, subject, sendName, sendEmail, timeSort, num, size, type , isDel, startTime, endTime } = params
+		let { toEmail, content, subject, sendName, sendEmail, timeSort, num, size, type , isDel } = params
 
 		const query = orm(c).select({
 				emailId: email.emailId,
@@ -76,14 +76,6 @@ const publicService = {
 
 		if (isDel || isDel === 0) {
 			conditions.push(eq(email.isDel, isDel))
-		}
-
-		if (startTime) {
-			conditions.push(sql`${email.createTime} >= ${startTime}`)
-		}
-
-		if (endTime) {
-			conditions.push(sql`${email.createTime} <= ${endTime}`)
 		}
 
 		if (conditions.length === 1) {
